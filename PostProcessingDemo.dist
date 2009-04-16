@@ -31,6 +31,9 @@ darcs-dev /extensions/Morphing        fh.daimi.au.dk:/users/cgd/code/extensions/
 darcs-dev /extensions/PostProcessing        fh.daimi.au.dk:/users/cgd/code/branches/PostProcessing
 darcs-dev /extensions/PostProcessingEffects fh.daimi.au.dk:/users/cgd/code/branches/PostProcessingEffects
 
+# data
+any /projects/PostProcessingDemo/data        http://openengine.dk/data/shaders/Effects.tar.gz
+
 # windows libraries
 win32 /libraries http://openengine.dk/data/libraries/boost-win32.zip
 win32 /libraries http://openengine.dk/data/libraries/glew-win32.zip

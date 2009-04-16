@@ -56,6 +56,37 @@
 #include <Utils/MoveHandler.h>
 
 #include "TeaPotNode.h"
+#include <EffectHandler.h>
+
+// Post processing extension
+#include <Renderers/OpenGL/PostProcessingRenderingView.h>
+
+// Post processing effects extension
+#include <Effects/SimpleDoF.h>
+#include <Effects/DoF.h>
+#include <Effects/Glow.h>
+#include <Effects/VolumetricLightScattering.h>
+
+
+// effects
+#include <Effects/Wobble.h>
+#include <Effects/Shadows.h>
+#include <Effects/SimpleBlur.h>
+#include <Effects/TwoPassBlur.h>
+#include <Effects/GaussianBlur.h>
+#include <Effects/Glow.h>
+#include <Effects/SimpleMotionBlur.h>
+#include <Effects/MotionBlur.h>
+#include <Effects/EdgeDetection.h>
+#include <Effects/Toon.h>
+#include <Effects/SimpleDoF.h>
+#include <Effects/VolumetricLightScattering.h>
+#include <Effects/GrayScale.h>
+#include <Effects/Pixelate.h>
+#include <Effects/Saturate.h>
+#include <Effects/ShowImage.h>
+#include <Effects/DoF.h>
+#include <Effects/SimpleExample.h>
 
 // Additional namespaces
 using namespace OpenEngine;
@@ -67,6 +98,32 @@ using namespace OpenEngine::Renderers::OpenGL;
 using namespace OpenEngine::Renderers;
 using namespace OpenEngine::Resources;
 using namespace OpenEngine::Utils;
+
+class Preprocessing : public RenderingView {
+private:
+	PostProcessingEffect* effect;
+
+public:
+	Preprocessing( Viewport& viewport, PostProcessingEffect* effect )
+        : IRenderingView(viewport), RenderingView(viewport), effect(effect) {}
+	
+	void Handle(RenderingEventArg arg) {
+		effect->PreRender();
+	}
+};
+
+class Postprocessing : public RenderingView {
+private:
+	PostProcessingEffect* effect;
+
+public:
+	Postprocessing( Viewport& viewport, PostProcessingEffect* effect )
+        : IRenderingView(viewport), RenderingView(viewport), effect(effect) {}
+	
+	void Handle(RenderingEventArg arg) {
+		effect->PostRender();
+	}
+};
 
 // Configuration structure to pass around to the setup methods
 struct Config {
@@ -141,7 +198,7 @@ void SetupResources(Config& config) {
     // set the resources directory
     // @todo we should check that this path exists
     // set the resources directory
-    string resources = "projects/MetaMorpher/data/";
+    string resources = "projects/PostProcessingDemo/data/";
     DirectoryManager::AppendPath(resources);
 
     // load resource plug-ins
@@ -227,6 +284,114 @@ void SetupRendering(Config& config) {
     renderer->PreProcessEvent()
       .Attach( *(new LightRenderer(*config.camera)) );
 
+
+    // add post processing effects
+    IEngine& engine = config.engine;
+    Viewport* viewport = config.viewport;
+
+	Wobble* wobble;
+    Glow* glow;
+    SimpleBlur* simpleBlur;
+    TwoPassBlur* twoPassBlur;
+    GaussianBlur* gaussianBlur;
+    SimpleMotionBlur* simpleMotionBlur;
+    MotionBlur* motionBlur;
+    SimpleDoF* simpleDoF;
+    EdgeDetection* edgeDetection;
+    Toon* toon;
+    GrayScale* grayscale;
+    Saturate* saturate;
+    Pixelate* pixelate;
+    VolumetricLightScattering* volumetricLightScattering;
+    Shadows* shadows;
+    //ShowImage* showImage;
+
+    vector<IPostProcessingEffect*> fullscreeneffects;
+	
+	wobble                    = new Wobble(viewport,engine);
+    glow                      = new Glow(viewport,engine);
+    simpleBlur                = new SimpleBlur(viewport,engine);
+    twoPassBlur               = new TwoPassBlur(viewport,engine);
+    gaussianBlur              = new GaussianBlur(viewport,engine);
+    simpleMotionBlur          = new SimpleMotionBlur(viewport,engine);
+    motionBlur                = new MotionBlur(viewport,engine);
+    simpleDoF                 = new SimpleDoF(viewport,engine);
+    edgeDetection             = new EdgeDetection(viewport,engine);
+    toon                      = new Toon(viewport,engine);
+    grayscale                 = new GrayScale(viewport,engine);
+    saturate                  = new Saturate(viewport,engine);
+    pixelate                  = new Pixelate(viewport,engine);
+    volumetricLightScattering = new VolumetricLightScattering(viewport,engine);
+    shadows                   = new Shadows(viewport,engine);
+    //this->showImage                 = new ShowImage(viewport,engine, texture);
+
+    // muligvis skal rækkefølgen laves om...
+    wobble->Add(edgeDetection);
+    wobble->Add(toon);
+    wobble->Add(glow);
+    wobble->Add(simpleBlur);
+    wobble->Add(twoPassBlur);
+    wobble->Add(gaussianBlur);
+    wobble->Add(simpleMotionBlur);
+    wobble->Add(motionBlur);
+    wobble->Add(simpleDoF);
+    wobble->Add(grayscale);
+    wobble->Add(saturate);
+    wobble->Add(volumetricLightScattering);
+    wobble->Add(shadows);
+    wobble->Add(pixelate);
+    //wobble->Add(showImage);
+
+    wobble->Enable(false);
+    glow->Enable(false);
+    simpleBlur->Enable(false);
+    twoPassBlur->Enable(false);
+    gaussianBlur->Enable(false);
+    simpleMotionBlur->Enable(false);
+    motionBlur->Enable(false);
+    simpleDoF->Enable(false);
+    edgeDetection->Enable(false);
+    toon->Enable(false);
+    grayscale->Enable(false);
+    saturate->Enable(false);
+    pixelate->Enable(false);
+    volumetricLightScattering->Enable(false);
+    shadows->Enable(false);
+
+    // add to effects
+    fullscreeneffects.push_back(wobble);
+    fullscreeneffects.push_back(glow);
+    fullscreeneffects.push_back(simpleBlur);
+    fullscreeneffects.push_back(twoPassBlur);
+    fullscreeneffects.push_back(gaussianBlur);
+    fullscreeneffects.push_back(simpleMotionBlur);
+    fullscreeneffects.push_back(motionBlur);
+    fullscreeneffects.push_back(simpleDoF);
+    fullscreeneffects.push_back(edgeDetection);
+    fullscreeneffects.push_back(toon);
+    fullscreeneffects.push_back(grayscale);
+    fullscreeneffects.push_back(saturate);
+    fullscreeneffects.push_back(pixelate);
+    fullscreeneffects.push_back(volumetricLightScattering);
+    fullscreeneffects.push_back(shadows);
+	
+        	
+    //MyEffect* ppe = new MyEffect(viewport,engine);
+    PostProcessingEffect* ppe = wobble; //new SimpleDoF(viewport);
+    
+    //PostProcessingEffect* ppe = new DoF(viewport);
+    //PostProcessingEffect* ppe = new Glow(viewport);
+    //PostProcessingEffect* ppe = new VolumetricLightScattering(viewport);
+    
+    IRenderingView* rv2 = new Preprocessing(*viewport, ppe);
+    IRenderingView* rv3 = new Postprocessing(*viewport, ppe);
+    renderer->PreProcessEvent().Attach(*rv2);
+    renderer->PostProcessEvent().Attach(*rv3);
+
+    // Register effect handler to be able to toggle effects
+    EffectHandler* effectHandler = 
+        new EffectHandler(fullscreeneffects, NULL, NULL);
+    config.keyboard->KeyEvent().Attach(*effectHandler);
 }
 
 void SetupScene(Config& config) {
