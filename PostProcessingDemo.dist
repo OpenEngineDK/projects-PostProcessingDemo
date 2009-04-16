@@ -13,7 +13,7 @@ darcs /extensions/SDL             http://openengine.dk/code/extensions/SDL
 darcs /extensions/OpenGLRenderer  http://openengine.dk/code/extensions/OpenGLRenderer
 darcs /extensions/GenericHandlers http://openengine.dk/code/extensions/GenericHandlers
 darcs /extensions/OBJResource     http://openengine.dk/code/extensions/OBJResource
-darcs /extensions/SDLImage        http://openengine.dk/code/extensions/SDLImage
+darcs /extensions/TGAResource     http://openengine.dk/code/extensions/TGAResource
 darcs /extensions/HUD             http://openengine.dk/code/extensions/HUD
 darcs /extensions/ActionMappers   http://openengine.dk/code/extensions/ActionMappers
 darcs /extensions/Morphing        http://openengine.dk/code/extensions/Morphing
@@ -24,7 +24,7 @@ darcs-dev /extensions/SDL             fh.daimi.au.dk:/users/cgd/code/extensions/
 darcs-dev /extensions/OpenGLRenderer  fh.daimi.au.dk:/users/cgd/code/extensions/OpenGLRenderer
 darcs-dev /extensions/GenericHandlers fh.daimi.au.dk:/users/cgd/code/extensions/GenericHandlers
 darcs-dev /extensions/OBJResource     fh.daimi.au.dk:/users/cgd/code/extensions/OBJResource
-darcs-dev /extensions/SDLImage        fh.daimi.au.dk:/users/cgd/code/extensions/SDLImage
+darcs-dev /extensions/TGAResource     fh.daimi.au.dk:/users/cgd/code/extensions/TGAResource
 darcs-dev /extensions/HUD             fh.daimi.au.dk:/users/cgd/code/extensions/HUD
 darcs-dev /extensions/ActionMappers   fh.daimi.au.dk:/users/cgd/code/extensions/ActionMappers
 darcs-dev /extensions/Morphing        fh.daimi.au.dk:/users/cgd/code/extensions/Morphing
