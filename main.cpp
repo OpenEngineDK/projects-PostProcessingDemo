@@ -38,7 +38,6 @@
 #include <Resources/ResourceManager.h>
 // OBJ and TGA plugins
 #include <Resources/ITextureResource.h>
-#include <Resources/SDLImage.h>
 #include <Resources/OBJResource.h>
 
 // Scene structures
@@ -75,7 +74,7 @@ struct Config {
     IFrame*               frame;
     Viewport*             viewport;
     IViewingVolume*       viewingvolume;
-    FollowCamera*         camera;
+    Camera*               camera;
     Frustum*              frustum;
     IRenderer*            renderer;
     IMouse*               mouse;
@@ -159,11 +158,11 @@ void SetupDisplay(Config& config) {
 
     //config.frame         = new SDLFrame(1440, 900, 32, FRAME_FULLSCREEN);
     config.frame         = new SDLFrame(800, 600, 32);
-    config.viewingvolume = new InterpolatedViewingVolume(*(new ViewingVolume()));
-    config.camera        = new FollowCamera( *config.viewingvolume );
+    config.viewingvolume = new ViewingVolume();
+    config.camera        = new Camera( *config.viewingvolume );
     //config.frustum       = new Frustum(*config.camera, 20, 3000);
 
-    config.camera->SetPosition(Vector<3,float>(0,0,20));
+    config.camera->SetPosition(Vector<3,float>(0,0,10));
     config.camera->LookAt(Vector<3,float>(0,0,0));
 
     config.viewport      = new Viewport(*config.frame);
@@ -245,6 +244,9 @@ void SetupScene(Config& config) {
     config.renderer->SetSceneRoot(config.scene);
 
     TransformationNode* tnode = new TransformationNode();
+    tnode->Rotate(0,0,Math::PI);
+    tnode->Rotate(0,Math::PI/2,0);
+    
     tnode->AddNode( new TeaPotNode(1.0) );
     config.scene->AddNode(tnode);
 }
