@@ -93,6 +93,7 @@ using namespace OpenEngine::Animation;
 #include <Effects/ShowImage.h>
 #include <Effects/DoF.h>
 #include <Effects/SimpleExample.h>
+#include <SunModule.h>
 
 // Additional namespaces
 using namespace OpenEngine;
@@ -276,7 +277,7 @@ void SetupRendering(Config& config) {
 
     Renderer* renderer = new Renderer(config.viewport);
     renderer->SetBackgroundColor(Vector<4,float>(0,0,0,1));
-    renderer->SetSceneRoot(new SceneNode());
+    //renderer->SetSceneRoot(new SceneNode());
     config.engine.InitializeEvent().Attach(*renderer);
     config.engine.ProcessEvent().Attach(*renderer);
     config.engine.DeinitializeEvent().Attach(*renderer);
@@ -313,7 +314,7 @@ void SetupRendering(Config& config) {
     //ShowImage* showImage;
 
     vector<IPostProcessingEffect*> fullscreeneffects;
-	
+    vector<std::string> fullscreeneffectsNames;
 	wobble                    = new Wobble(viewport,engine);
     glow                      = new Glow(viewport,engine);
     simpleBlur                = new SimpleBlur(viewport,engine);
@@ -330,6 +331,10 @@ void SetupRendering(Config& config) {
     volumetricLightScattering = new VolumetricLightScattering(viewport,engine);
     shadows                   = new Shadows(viewport,engine);
     //this->showImage                 = new ShowImage(viewport,engine, texture);
+	//missing: showImage, sunmodule 
+
+    SimpleExample* simpleExample = new SimpleExample(viewport,engine);
+    DoF* dof = new DoF(viewport, engine);
 
     // muligvis skal rækkefølgen laves om...
     wobble->Add(edgeDetection);
@@ -346,7 +351,8 @@ void SetupRendering(Config& config) {
     wobble->Add(volumetricLightScattering);
     wobble->Add(shadows);
     wobble->Add(pixelate);
-    //wobble->Add(showImage);
+    wobble->Add(simpleExample);
+    wobble->Add(dof);
 
     wobble->Enable(false);
     glow->Enable(false);
@@ -363,6 +369,8 @@ void SetupRendering(Config& config) {
     pixelate->Enable(false);
     volumetricLightScattering->Enable(false);
     shadows->Enable(false);
+    simpleExample->Enable(false);
+    dof->Enable(false);
 
     // add to effects
     fullscreeneffects.push_back(wobble);
@@ -380,24 +388,49 @@ void SetupRendering(Config& config) {
     fullscreeneffects.push_back(pixelate);
     fullscreeneffects.push_back(volumetricLightScattering);
     fullscreeneffects.push_back(shadows);
+    fullscreeneffects.push_back(simpleExample);
+    fullscreeneffects.push_back(dof);
 	
+    fullscreeneffectsNames.push_back("wobble");
+    fullscreeneffectsNames.push_back("glow");
+    fullscreeneffectsNames.push_back("simpleBlur");
+    fullscreeneffectsNames.push_back("twoPassBlur");
+    fullscreeneffectsNames.push_back("gaussianBlur");
+    fullscreeneffectsNames.push_back("simpleMotionBlur");
+    fullscreeneffectsNames.push_back("motionBlur");
+    fullscreeneffectsNames.push_back("simpleDoF");
+    fullscreeneffectsNames.push_back("edgeDetection");
+    fullscreeneffectsNames.push_back("toon");
+    fullscreeneffectsNames.push_back("grayscale");
+    fullscreeneffectsNames.push_back("saturate");
+    fullscreeneffectsNames.push_back("pixelate");
+    fullscreeneffectsNames.push_back("volumetricLightScattering");
+    fullscreeneffectsNames.push_back("shadows");
+    fullscreeneffectsNames.push_back("simpleExample");
+    fullscreeneffectsNames.push_back("dof");
         	
-    //MyEffect* ppe = new MyEffect(viewport,engine);
-    PostProcessingEffect* ppe = wobble; //new SimpleDoF(viewport);
-    
-    //PostProcessingEffect* ppe = new DoF(viewport);
-    //PostProcessingEffect* ppe = new Glow(viewport);
-    //PostProcessingEffect* ppe = new VolumetricLightScattering(viewport);
-    
+    PostProcessingEffect* ppe = wobble;
+        
     IRenderingView* rv2 = new Preprocessing(*viewport, ppe);
     IRenderingView* rv3 = new Postprocessing(*viewport, ppe);
     renderer->PreProcessEvent().Attach(*rv2);
     renderer->PostProcessEvent().Attach(*rv3);
 
+    VolumetricLightScattering* sun = new
+        VolumetricLightScattering(viewport,engine);
+    TransformationNode* sunTrans = new TransformationNode();
+    SunModule* sunModule = new SunModule(sun,
+                                         sunTrans, config.camera);
+    config.engine.ProcessEvent().Attach(*sunModule);
+    sun->Enable(true);
+    sunModule->SetFollowSun(false);
+    //config.scene->AddNode(sunTrans);
+
     // Register effect handler to be able to toggle effects
     EffectHandler* effectHandler = 
-        new EffectHandler(fullscreeneffects, NULL, NULL);
+        new EffectHandler(fullscreeneffects, NULL, sunModule);
     config.keyboard->KeyEvent().Attach(*effectHandler);
+    effectHandler->SetNameList(fullscreeneffectsNames);
 }
 
 void SetupScene(Config& config) {
@@ -410,6 +443,7 @@ void SetupScene(Config& config) {
     RenderStateNode* renderStateNode = new RenderStateNode();
     renderStateNode->EnableOption(RenderStateNode::LIGHTING);
     renderStateNode->DisableOption(RenderStateNode::WIREFRAME);
+
     config.scene = renderStateNode;
 
     // Supply the scene to the renderer
