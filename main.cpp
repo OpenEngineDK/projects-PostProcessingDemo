@@ -61,6 +61,8 @@
 #include <Animation/TransformationNodeMorpher.h>
 using namespace OpenEngine::Animation;
 
+#include <Meta/OpenGL.h>
+
 #include "TeaPotNode.h"
 #include <EffectHandler.h>
 
@@ -116,6 +118,7 @@ public:
 	
 	void Handle(RenderingEventArg arg) {
 		effect->PreRender();
+        CHECK_FOR_GL_ERROR();
 	}
 };
 
@@ -129,6 +132,7 @@ public:
 	
 	void Handle(RenderingEventArg arg) {
 		effect->PostRender();
+        CHECK_FOR_GL_ERROR();
 	}
 };
 
@@ -341,18 +345,18 @@ void SetupRendering(Config& config) {
     wobble->Add(toon);
     wobble->Add(glow);
     wobble->Add(simpleBlur);
-    wobble->Add(twoPassBlur);
+    //wobble->Add(twoPassBlur);
     wobble->Add(gaussianBlur);
     wobble->Add(simpleMotionBlur);
     wobble->Add(motionBlur);
-    wobble->Add(simpleDoF);
+    //wobble->Add(simpleDoF);
     wobble->Add(grayscale);
-    wobble->Add(saturate);
-    wobble->Add(volumetricLightScattering);
-    wobble->Add(shadows);
-    wobble->Add(pixelate);
+    //wobble->Add(saturate);
+    //wobble->Add(volumetricLightScattering);
+    //wobble->Add(shadows);
+    //wobble->Add(pixelate);
     wobble->Add(simpleExample);
-    wobble->Add(dof);
+    //wobble->Add(dof);
 
     wobble->Enable(false);
     glow->Enable(false);
@@ -408,7 +412,7 @@ void SetupRendering(Config& config) {
     fullscreeneffectsNames.push_back("shadows");
     fullscreeneffectsNames.push_back("simpleExample");
     fullscreeneffectsNames.push_back("dof");
-        	
+
     PostProcessingEffect* ppe = wobble;
         
     IRenderingView* rv2 = new Preprocessing(*viewport, ppe);
