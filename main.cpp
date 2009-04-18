@@ -1,4 +1,4 @@
-// Main setup for the OpenEngine MetaMopher project.
+// Main setup for the OpenEngine PostProcessingDemo project.
 // -------------------------------------------------------------------
 // Copyright (C) 2008 OpenEngine.dk (See AUTHORS) 
 // 
@@ -45,6 +45,7 @@
 #include <Scene/SceneNode.h>
 #include <Scene/GeometryNode.h>
 #include <Scene/TransformationNode.h>
+#include <Scene/PointLightNode.h>
 
 // Utilities and logger
 #include <Logging/Logger.h>
@@ -53,7 +54,12 @@
 
 // OERacer utility files
 #include <Utils/QuitHandler.h>
+#include <Utils/RenderStateHandler.h>
 #include <Utils/MoveHandler.h>
+
+#include <Animation/MetaMorpher.h>
+#include <Animation/TransformationNodeMorpher.h>
+using namespace OpenEngine::Animation;
 
 #include "TeaPotNode.h"
 #include <EffectHandler.h>
@@ -402,18 +408,63 @@ void SetupScene(Config& config) {
 
     // Create a root scene node
     RenderStateNode* renderStateNode = new RenderStateNode();
-    renderStateNode->DisableOption(RenderStateNode::LIGHTING);
+    renderStateNode->EnableOption(RenderStateNode::LIGHTING);
+    renderStateNode->DisableOption(RenderStateNode::WIREFRAME);
     config.scene = renderStateNode;
 
     // Supply the scene to the renderer
     config.renderer->SetSceneRoot(config.scene);
 
+    //add point light
+    PointLightNode* light1 = new PointLightNode();
+    TransformationNode* light1Pos = new TransformationNode();
+    light1Pos->SetPosition(Vector<3,float>(-100,0,0));
+    light1Pos->AddNode(light1);
+    config.scene->AddNode(light1Pos);
+
+    //Bind renderstatenode handler: F1...
+    RenderStateHandler* rs_h = new RenderStateHandler(*renderStateNode);
+    config.keyboard->KeyEvent().Attach(*rs_h);
+    
+
+    TransformationNode* left = new TransformationNode();
+    //left->SetPosition(Vector<3,float>(-10,0,0));
+
+    TransformationNode* topCenter = new TransformationNode();
+    //topCenter->SetPosition(Vector<3,float>(0,7,0));
+    topCenter->SetRotation(Quaternion<float>(Math::PI/2,0,Math::PI/2));
+
+    TransformationNode* right = new TransformationNode();
+    //right->SetPosition(Vector<3,float>(10,0,0));
+    right->SetRotation(Quaternion<float>(Math::PI,0,Math::PI));
+
+    TransformationNode* bottomCenter = new TransformationNode();
+    //bottomCenter->SetPosition(Vector<3,float>(0,-7,0));
+    bottomCenter->SetRotation(Quaternion<float>(-Math::PI/2,0,-Math::PI/2));
+
+    TransformationNodeMorpher* tmorpher =
+      new TransformationNodeMorpher();
+    
+    MetaMorpher<TransformationNode>* metamorpher =
+      new MetaMorpher<TransformationNode>
+      (tmorpher,LOOP);
+    config.engine.ProcessEvent().Attach(*metamorpher);
+    metamorpher->Add(left, new Utils::Time(0));
+    metamorpher->Add(topCenter, new Utils::Time(3000000));
+    metamorpher->Add(right, new Utils::Time(6000000));
+    metamorpher->Add(bottomCenter, new Utils::Time(9000000));
+    metamorpher->Add(left, new Utils::Time(12000000));
+    
+    TransformationNode* trans = metamorpher->GetObject();
+    trans->AddNode(new TeaPotNode(1.0));
+
+
     TransformationNode* tnode = new TransformationNode();
     tnode->Rotate(0,0,Math::PI);
     tnode->Rotate(0,Math::PI/2,0);
-    
-    tnode->AddNode( new TeaPotNode(1.0) );
     config.scene->AddNode(tnode);
+
+    tnode->AddNode(trans);
 }
 
 void SetupDebugging(Config& config) {
