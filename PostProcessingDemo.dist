@@ -1,35 +1,35 @@
 # OpenEngine Distribution file for PostProcessingDemo.
 
 # main repository
-darcs / http://openengine.dk/code/openengine
-darcs-dev / fh.daimi.au.dk:/users/cgd/code/openengine
+git / https://github.com/OpenEngineDK/openengine.git
+git-dev / git@github.com:OpenEngineDK/openengine.git
 
 # PostProcessingDemo project
-darcs /projects/PostProcessingDemo http://openengine.dk/code/projects/PostProcessingDemo
-darcs-dev /projects/PostProcessingDemo fh.daimi.au.dk:/users/cgd/code/projects/PostProcessingDemo
+git /projects/PostProcessingDemo https://github.com/OpenEngineDK/projects-PostProcessingDemo.git
+git-dev /projects/PostProcessingDemo git@github.com:OpenEngineDK/projects-PostProcessingDemo.git
 
 # standard set of extensions
-darcs /extensions/SDL             http://openengine.dk/code/extensions/SDL
-darcs /extensions/OpenGLRenderer  http://openengine.dk/code/extensions/OpenGLRenderer
-darcs /extensions/GenericHandlers http://openengine.dk/code/extensions/GenericHandlers
-darcs /extensions/OBJResource     http://openengine.dk/code/extensions/OBJResource
-darcs /extensions/TGAResource     http://openengine.dk/code/extensions/TGAResource
-darcs /extensions/HUD             http://openengine.dk/code/extensions/HUD
-darcs /extensions/ActionMappers   http://openengine.dk/code/extensions/ActionMappers
-darcs /extensions/Morphing        http://openengine.dk/code/extensions/Morphing
-darcs /extensions/PostProcessing        http://openengine.dk/code/branches/PostProcessing
-darcs /extensions/PostProcessingEffects http://openengine.dk/code/branches/PostProcessingEffects
+git /extensions/SDL             https://github.com/OpenEngineDK/extensions-SDL.git
+git /extensions/OpenGLRenderer  https://github.com/OpenEngineDK/extensions-OpenGLRenderer.git
+git /extensions/GenericHandlers https://github.com/OpenEngineDK/extensions-GenericHandlers.git
+git /extensions/OBJResource     https://github.com/OpenEngineDK/extensions-OBJResource.git
+git /extensions/TGAResource     https://github.com/OpenEngineDK/extensions-TGAResource.git
+git /extensions/HUD             https://github.com/OpenEngineDK/extensions-HUD.git
+git /extensions/ActionMappers   https://github.com/OpenEngineDK/extensions-ActionMappers.git
+git /extensions/Morphing        https://github.com/OpenEngineDK/extensions-Morphing.git
+git /extensions/PostProcessing        https://github.com/OpenEngineDK/branches-PostProcessing.git
+git /extensions/PostProcessingEffects https://github.com/OpenEngineDK/branches-PostProcessingEffects.git
 
-darcs-dev /extensions/SDL             fh.daimi.au.dk:/users/cgd/code/extensions/SDL
-darcs-dev /extensions/OpenGLRenderer  fh.daimi.au.dk:/users/cgd/code/extensions/OpenGLRenderer
-darcs-dev /extensions/GenericHandlers fh.daimi.au.dk:/users/cgd/code/extensions/GenericHandlers
-darcs-dev /extensions/OBJResource     fh.daimi.au.dk:/users/cgd/code/extensions/OBJResource
-darcs-dev /extensions/TGAResource     fh.daimi.au.dk:/users/cgd/code/extensions/TGAResource
-darcs-dev /extensions/HUD             fh.daimi.au.dk:/users/cgd/code/extensions/HUD
-darcs-dev /extensions/ActionMappers   fh.daimi.au.dk:/users/cgd/code/extensions/ActionMappers
-darcs-dev /extensions/Morphing        fh.daimi.au.dk:/users/cgd/code/extensions/Morphing
-darcs-dev /extensions/PostProcessing        fh.daimi.au.dk:/users/cgd/code/branches/PostProcessing
-darcs-dev /extensions/PostProcessingEffects fh.daimi.au.dk:/users/cgd/code/branches/PostProcessingEffects
+git-dev /extensions/SDL             git@github.com:OpenEngineDK/extensions-SDL.git
+git-dev /extensions/OpenGLRenderer  git@github.com:OpenEngineDK/extensions-OpenGLRenderer.git
+git-dev /extensions/GenericHandlers git@github.com:OpenEngineDK/extensions-GenericHandlers.git
+git-dev /extensions/OBJResource     git@github.com:OpenEngineDK/extensions-OBJResource.git
+git-dev /extensions/TGAResource     git@github.com:OpenEngineDK/extensions-TGAResource.git
+git-dev /extensions/HUD             git@github.com:OpenEngineDK/extensions-HUD.git
+git-dev /extensions/ActionMappers   git@github.com:OpenEngineDK/extensions-ActionMappers.git
+git-dev /extensions/Morphing        git@github.com:OpenEngineDK/extensions-Morphing.git
+git-dev /extensions/PostProcessing        git@github.com:OpenEngineDK/branches-PostProcessing.git
+git-dev /extensions/PostProcessingEffects git@github.com:OpenEngineDK/branches-PostProcessingEffects.git
 
 # data
 any /projects/PostProcessingDemo/data        http://openengine.dk/data/shaders/Effects.tar.gz
